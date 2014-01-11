@@ -1,7 +1,7 @@
 ﻿<h1>Employees</h1>
 <div class="loadingIndicator" data-bind="visible: loading()"></div>
 <table class="table" data-bind="visible: !loading()">
-   <thead>
+    <thead>
         <tr>
             <th>Name</th>
             <th>Email</th>
@@ -9,15 +9,25 @@
         </tr>
     </thead>
     <tbody data-bind="foreach: employees">
-        <tr>
-            <td data-bind="text: Email"></td>
-            <td data-bind="text: Email"></td>
-            <td data-bind="text: Salary"></td>
-        </tr> 
+        <tr data-bind="template: { name:'edit-template', data:$data}"></tr>
     </tbody>
 </table>
 
-@section scripts{     
-<script src="~/Scripts/knockout-2.2.0.js"></script>
-<script src="~/App/EmployeeViewModel.js"></script>
+<script type="text/html" id="read-template">
+    <td data-bind="text: Email"></td>
+    <td data-bind="text: Email"></td>
+    <td data-bind="displayMoney: Salary"></td>
+</script>
+
+<script type="text/html" id="edit-template">
+    <td><input type="text" data-bind="value: Name" /></td>
+    <td><input type="text" data-bind="value: Email" /></td>
+    <td><input type="text" data-bind="value: Salary" /></td>
+</script>
+
+@section scripts{
+    
+    <script src="~/Scripts/knockout-3.0.0.js"></script>
+    <script src="~/App/EmployeeViewModel.js"></script>
+    <script src="~/App/CustomBindings.js"></script>
 }

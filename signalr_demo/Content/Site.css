@@ -1,5 +1,5 @@
 ﻿.loadingIndicator{
-    background-image:url('/Images/loading.png');
-    height :51px;
-    width :51px;
+    background-image:url('/Images/loading.gif');
+    height :32px;
+    width :32px;
 }
