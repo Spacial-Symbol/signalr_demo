@@ -69,3 +69,5 @@ E:\UserData Vinay Joshi\Vinay Data\Spacial Symbol\SignalRDemo\signalr_demo\signa
 E:\UserData Vinay Joshi\Vinay Data\Spacial Symbol\SignalRDemo\signalr_demo\signalr_demo\obj\Debug\signalr_demo.csprojResolveAssemblyReference.cache
 E:\UserData Vinay Joshi\Vinay Data\Spacial Symbol\SignalRDemo\signalr_demo\signalr_demo\obj\Debug\signalr_demo.dll
 E:\UserData Vinay Joshi\Vinay Data\Spacial Symbol\SignalRDemo\signalr_demo\signalr_demo\obj\Debug\signalr_demo.pdb
+E:\UserData Vinay Joshi\Vinay Data\Spacial Symbol\SignalRDemo\signalr_demo\signalr_demo\obj\Debug\signalr_demo.Migrations.IntitialCreate.resources
+E:\UserData Vinay Joshi\Vinay Data\Spacial Symbol\SignalRDemo\signalr_demo\signalr_demo\obj\Debug\signalr_demo.csproj.GenerateResource.Cache
