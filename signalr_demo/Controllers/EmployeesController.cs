@@ -1,4 +1,4 @@
-﻿ using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -8,99 +8,122 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.OData;
 using signalr_demo.Models;
 
 namespace signalr_demo.Controllers
 {
-    public class EmployeesController : ApiController
+    public class EmployeesController : EntitySetController<Employee, int>
     {
         private signalr_demoContext db = new signalr_demoContext();
 
-        // GET api/Employees
-        public IEnumerable<Employee> GetEmployees()
+        #region old Code
+        //// GET api/Employees
+        //public IEnumerable<Employee> GetEmployees()
+        //{
+        //    return db.Employees.AsEnumerable();
+        //}
+
+        //// GET api/Employees/5
+        //public Employee GetEmployee(int id)
+        //{
+        //    Employee employee = db.Employees.Find(id);
+        //    if (employee == null)
+        //    {
+        //        throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
+        //    }
+
+        //    return employee;
+        //}
+
+        //// PUT api/Employees/5
+        //public HttpResponseMessage PutEmployee(int id, Employee employee)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+        //    }
+
+        //    if (id != employee.Id)
+        //    {
+        //        return Request.CreateResponse(HttpStatusCode.BadRequest);
+        //    }
+
+        //    db.Entry(employee).State = EntityState.Modified;
+
+        //    try
+        //    {
+        //        db.SaveChanges();
+        //    }
+        //    catch (DbUpdateConcurrencyException ex)
+        //    {
+        //        return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
+        //    }
+
+        //    return Request.CreateResponse(HttpStatusCode.OK);
+        //}
+
+        //// POST api/Employees
+        //public HttpResponseMessage PostEmployee(Employee employee)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Employees.Add(employee);
+        //        db.SaveChanges();
+
+        //        HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, employee);
+        //        response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = employee.Id }));
+        //        return response;
+        //    }
+        //    else
+        //    {
+        //        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+        //    }
+        //}
+
+        //// DELETE api/Employees/5
+        //public HttpResponseMessage DeleteEmployee(int id)
+        //{
+        //    Employee employee = db.Employees.Find(id);
+        //    if (employee == null)
+        //    {
+        //        return Request.CreateResponse(HttpStatusCode.NotFound);
+        //    }
+
+        //    db.Employees.Remove(employee);
+
+        //    try
+        //    {
+        //        db.SaveChanges();
+        //    }
+        //    catch (DbUpdateConcurrencyException ex)
+        //    {
+        //        return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
+        //    }
+
+        //    return Request.CreateResponse(HttpStatusCode.OK, employee);
+        //}
+        #endregion
+
+        public override IQueryable<Employee> Get()
         {
-            return db.Employees.AsEnumerable();
+            return db.Employees;
         }
 
-        // GET api/Employees/5
-        public Employee GetEmployee(int id)
+        protected override Employee GetEntityByKey(int key)
         {
-            Employee employee = db.Employees.Find(id);
-            if (employee == null)
-            {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
-            }
-
-            return employee;
+            return db.Employees.Find(key);
         }
 
-        // PUT api/Employees/5
-        public HttpResponseMessage PutEmployee(int id, Employee employee)
+        protected override Employee PatchEntity(int key, Delta<Employee> patch)
         {
-            if (!ModelState.IsValid)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
-            }
-
-            if (id != employee.Id)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
-
-            db.Entry(employee).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
-            }
-
-            return Request.CreateResponse(HttpStatusCode.OK);
+            var employeeToPatch = GetEntityByKey(key);
+            patch.Patch(employeeToPatch);
+            db.Entry(employeeToPatch).State = EntityState.Modified;
+            db.SaveChanges();
+            return employeeToPatch;
         }
 
-        // POST api/Employees
-        public HttpResponseMessage PostEmployee(Employee employee)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Employees.Add(employee);
-                db.SaveChanges();
-
-                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, employee);
-                response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = employee.Id }));
-                return response;
-            }
-            else
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
-            }
-        }
-
-        // DELETE api/Employees/5
-        public HttpResponseMessage DeleteEmployee(int id)
-        {
-            Employee employee = db.Employees.Find(id);
-            if (employee == null)
-            {
-                return Request.CreateResponse(HttpStatusCode.NotFound);
-            }
-
-            db.Employees.Remove(employee);
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
-            }
-
-            return Request.CreateResponse(HttpStatusCode.OK, employee);
-        }
 
         protected override void Dispose(bool disposing)
         {

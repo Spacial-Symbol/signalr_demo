@@ -19,19 +19,29 @@
         });
     }
 
-    self.modelChanged = function (model, key, value) {
-        alert(model.id);
-        alert(key);
-        alert(value);
+    self.modelChanged = function (model, key, val) {
+        var payload = {};
+        payload[key] = val;
+        $.ajax({
+            url: '/odata/Employees(' + model.id + ')',
+            type: 'PATCH',
+            data: JSON.stringify(payload),
+            contentType: 'application/json',
+            dataType: 'json'
+        });
+       // alert(model.id);
+       // alert(key);
+       // alert(value);
     }
 
-    $.getJSON('api/Employees', function (data) {
-        self.employees(ko.utils.arrayMap(data, function (employee) {
+
+    $.getJSON('/odata/Employees', function (data) {
+        self.employees(ko.utils.arrayMap(data.value, function (employee) {
             var obsEmployee = {
                 id: employee.Id,
                 Name: ko.observable(employee.Name),
                 Email: ko.observable(employee.Email),
-                Salary:ko.observable(employee.Salary)
+                Salary: ko.observable(employee.Salary)
             }
             self.watchModel(obsEmployee, self.modelChanged);
             return obsEmployee;
@@ -39,6 +49,21 @@
         self.loading(false);
     });
 }
+
+//    $.getJSON('api/Employees', function (data) {
+//        self.employees(ko.utils.arrayMap(data, function (employee) {
+//            var obsEmployee = {
+//                id: employee.Id,
+//                Name: ko.observable(employee.Name),
+//                Email: ko.observable(employee.Email),
+//                Salary:ko.observable(employee.Salary)
+//            }
+//            self.watchModel(obsEmployee, self.modelChanged);
+//            return obsEmployee;
+//        }));
+//        self.loading(false);
+//    });
+//}
 
 $(function () {
     ko.applyBindings(new EmployeeViewModel);
